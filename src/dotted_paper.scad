@@ -29,15 +29,15 @@ spacing = 1.5;
 
 extra = (paper_y%(gap*spacing+gap))/2;
 
-y_start = extra;
-y_end = extra-1;
+south = extra;
+north = paper_y-extra-1;
 
 hole_margin = gap*2;
 
 x_margin = (paper_x%gap)/2;
-x_start = x_margin;
-x_end = paper_x-x_margin-hole_margin;
-x_total = x_end-x_start;
+west = x_margin;
+east = paper_x-x_margin-hole_margin;
+x_total = east-west;
 
 bar_y=gap*(spacing-1);
 bar_x=paper_x-(paper_x%gap);
@@ -54,6 +54,12 @@ dot_step=dot_size;
 module corner() {
     square([corner_width,corner_length]);
     square([corner_length,corner_width]);
+}
+
+module corners() {
+    dirror_y(paper_y)
+    dirror_x(paper_x)
+    corner();
 }
 
 module dots_scaled() {
@@ -82,13 +88,13 @@ module dots() {
 	union() {
 	    translate([(paper_x%gap)/2,0])
 	    for(i=[0:gap:paper_x])
-	    for(j=[paper_y-y_start:-gap*spacing:y_end])
+	    for(j=[south:gap*spacing:north])
 	    translate([i,j])
 	    circle(d=dot);
 
 	    translate([(paper_x%gap)/2,0])
 	    for(i=[0:gap:paper_x])
-	    for(j=[paper_y-y_start-gap:-gap*spacing:y_end])
+	    for(j=[south-gap:gap*spacing:north])
 	    translate([i,j])
 	    circle(d=dot);
 	}
@@ -101,20 +107,14 @@ module dots() {
 	}
     }
 
-    dirror_y(paper_y)
-    dirror_x(paper_x)
-    corner();
+    corners();
 }
 
 // RENDER svg
 module bars() {
-    dirror_y(paper_y)
-    dirror_x(paper_x)
-    corner();
+    corners();
 
-    // full page
-    //for(j=[paper_y-y_start-gap+gap*spacing:-gap*spacing:y_end])
-    for(j=[paper_y-y_start-gap:-gap*spacing:y_end+gap*spacing])
+    for(j=[south:gap*spacing:north])
     translate([(paper_x%gap)/2,j-gap*(spacing-1)])
     bar();
 }
@@ -124,4 +124,5 @@ module bar() {
 }
 
 bars();
+dots();
 
