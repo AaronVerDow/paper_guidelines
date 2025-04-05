@@ -1,55 +1,29 @@
-// 148 x 210
-
-// how to print 
-
-// openscad-redner file.scad
-// open in firefox
-// set page size, print to PDF with scale to 10
-// set printer size to paper
-// notebook holes go on the right
-// lp -o fit-to-page=false -o scaling=100 test_dots.pdf -d brother2 -o media=Custom.148x210mm -o print-quality=5
-// put paper back in with printed dots up
-// print again
-
 paper_x = 148;
 paper_y = 210;
 dot = 1;
-$fn=45;
 
-gap = 5;
+$fn=6;
+
+grid = 5;
+space = grid;  // where to write
+line = grid/2; // thickness of line between spaces
+step = space + line;
 
 corner_width = 0.3;
 corner_length = 1;
 
 margin = 1;
 
-holes = 6.5;
 
 spacing = 1.5;
 
-extra = (paper_y%(gap*spacing+gap))/2;
+y_margin = ((paper_y-line)%step)/2;
+south = y_margin;
+north = paper_y-y_margin;
 
-south = extra;
-north = paper_y-extra-1;
-
-hole_margin = gap*2;
-
-x_margin = (paper_x%gap)/2;
+x_margin = (paper_x%grid)/2;
 west = x_margin;
-east = paper_x-x_margin-hole_margin;
-x_total = east-west;
-
-bar_y=gap*(spacing-1);
-bar_x=paper_x-(paper_x%gap);
-
-
-width = bar_x;
-height = bar_y;
-
-density_top = 0.6;    // 90% coverage at top
-density_bottom = 0; // 10% coverage at bottom
-dot_size=0.03;
-dot_step=dot_size;
+east = paper_x-x_margin;
 
 module corner() {
     square([corner_width,corner_length]);
@@ -57,14 +31,10 @@ module corner() {
 }
 
 module corners() {
+    color("red")
     dirror_y(paper_y)
     dirror_x(paper_x)
     corner();
-}
-
-module dots_scaled() {
-    scale(10)
-    dots();
 }
 
 module dirror_y(y=0) {
@@ -74,7 +44,6 @@ module dirror_y(y=0) {
     children();
 }
 
-
 module dirror_x(x=0) {
     children();
     translate([x,0])
@@ -82,47 +51,105 @@ module dirror_x(x=0) {
     children();
 }
 
-// RENDER svg
 module dots() {
-    intersection() {
-	union() {
-	    translate([(paper_x%gap)/2,0])
-	    for(i=[0:gap:paper_x])
-	    for(j=[south:gap*spacing:north])
-	    translate([i,j])
-	    circle(d=dot);
+    for(x=[west:grid:east]) {
+	for(y=[south:step:north])
+	translate([x,y])
+	circle(d=dot);
 
-	    translate([(paper_x%gap)/2,0])
-	    for(i=[0:gap:paper_x])
-	    for(j=[south-gap:gap*spacing:north])
-	    translate([i,j])
-	    circle(d=dot);
-	}
+	for(y=[south+line:step:north])
+	translate([x,y])
+	circle(d=dot);
+    }
+}
 
-	difference() {
-	    translate([margin, margin])
-	    square([paper_x-margin*2,paper_y-margin*2]);
-	    translate([paper_x-holes,paper_y])
-	    square([holes,paper_y]);
-	}
+module bars() {
+    for(j=[south:step:north])
+    translate([x_margin,j])
+    square([east-west,line]);
+}
+
+module debugging_scale(name="") {
+
+    fontsize = 5;
+    steps = 20;
+
+    // deugging lines
+    fives = 10;
+    other = 6;
+    thickness = 0.3;
+
+    translate([0,steps+2])
+    text(name, halign="center", size=fontsize);
+    
+    for(y=[0:1:steps])
+    translate([0,y])
+    if (y%5 ==0) {
+	square([fives,thickness],center=true);
+    } else {
+	square([other,thickness],center=true);
     }
 
-    corners();
+    for(y=[0:5:steps])
+    label(y);
+
+    module label(y) {
+	translate([fives/2+1,y])
+	text(str(y), valign="center", size=2);
+
+	translate([-fives/2-1,y])
+	text(str(y), halign="right", valign="center", size=2);
+    }
 }
 
-// RENDER svg
-module bars() {
-    corners();
+debugging_line_font_size=3.5;
 
-    for(j=[south:gap*spacing:north])
-    translate([(paper_x%gap)/2,j-gap*(spacing-1)])
-    bar();
+module debugging_line(message) {
+    text(message, halign="center", valign="center", size=debugging_line_font_size);
+    translate([0,-step])
+    children();
 }
 
-module bar() {
-    square([x_total,gap*(spacing-1)]);
+module debug_variables() {
+    translate([paper_x/2,north-step*8+space/2])
+    debugging_line(str("paper_y = ", paper_y))
+    debugging_line(str("north = ", north))
+    debugging_line(str("south = ", south))
+    debugging_line(str("paper_x = ", paper_x))
+    debugging_line(str("east = ", east))
+    debugging_line(str("west = ", west))
+    debugging_line(str("grid = ", grid))
+    debugging_line(str("line = ", line))
+    ;
 }
 
-bars();
-dots();
+module debug() {
+    translate([paper_x/2,0])
+    debugging_scale("south");
 
+    translate([paper_x/2,paper_y])
+    rotate([0,0,180])
+    debugging_scale("north");
+
+    translate([paper_x,paper_y/2])
+    rotate([0,0,90])
+    debugging_scale("east");
+
+    translate([0,paper_y/2])
+    rotate([0,0,-90])
+    debugging_scale("west");
+}
+
+difference() {
+    union() {
+	bars();
+	dots();
+    }
+    minkowski() {
+	debug();
+	circle(d=5, $fn=6);
+    }
+}
+debug();
+debug_variables();
+corners();
