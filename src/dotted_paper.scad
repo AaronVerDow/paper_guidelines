@@ -12,11 +12,6 @@ step = space + line;
 corner_width = 0.3;
 corner_length = 1;
 
-margin = 1;
-
-
-spacing = 1.5;
-
 y_margin = ((paper_y-line)%step)/2;
 south = y_margin;
 north = paper_y-y_margin;
@@ -115,12 +110,15 @@ module debug_variables() {
     debugging_line(str("paper_y = ", paper_y))
     debugging_line(str("north = ", north))
     debugging_line(str("south = ", south))
+    debugging_line("")
     debugging_line(str("paper_x = ", paper_x))
     debugging_line(str("east = ", east))
     debugging_line(str("west = ", west))
+    debugging_line("")
     debugging_line(str("grid = ", grid))
+    debugging_line(str("space = ", space))
     debugging_line(str("line = ", line))
-    ;
+    children();
 }
 
 module debug() {
