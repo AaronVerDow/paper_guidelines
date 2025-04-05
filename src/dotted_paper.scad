@@ -12,13 +12,20 @@ step = space + line;
 corner_width = 0.3;
 corner_length = 1;
 
-y_margin = ((paper_y-line)%step)/2;
-south = y_margin;
-north = paper_y-y_margin;
+margin = 0;
+north_margin = margin + 0;
+south_margin = margin + 0;
+east_margin = margin + 0;
+west_margin = margin + 0;
 
-x_margin = (paper_x%grid)/2;
-west = x_margin;
-east = paper_x-x_margin;
+
+y_offset = ((paper_y-line-north_margin-south_margin)%step)/2;
+south = y_offset+south_margin;
+north = paper_y-y_offset-north_margin;
+
+x_offset = ((paper_x-east_margin-west_margin)%grid)/2;
+west = x_offset+west_margin;
+east = paper_x-x_offset-east_margin;
 
 module corner() {
     square([corner_width,corner_length]);
@@ -60,7 +67,7 @@ module dots() {
 
 module bars() {
     for(j=[south:step:north])
-    translate([x_margin,j])
+    translate([west,j])
     square([east-west,line]);
 }
 
@@ -106,18 +113,17 @@ module debugging_line(message) {
 }
 
 module debug_variables() {
-    translate([paper_x/2,north-step*8+space/2])
+    translate([paper_x/2,north-step*6+space/2])
+    debugging_line(str("grid = ", grid, ", space = ", space, ", line = ", line))
+    debugging_line(str("global margin = ", margin))
+    debugging_line("")
     debugging_line(str("paper_y = ", paper_y))
-    debugging_line(str("north = ", north))
-    debugging_line(str("south = ", south))
+    debugging_line(str("north = ", north, ", margin = ", north_margin))
+    debugging_line(str("south = ", south, ", margin = ", south_margin))
     debugging_line("")
     debugging_line(str("paper_x = ", paper_x))
-    debugging_line(str("east = ", east))
-    debugging_line(str("west = ", west))
-    debugging_line("")
-    debugging_line(str("grid = ", grid))
-    debugging_line(str("space = ", space))
-    debugging_line(str("line = ", line))
+    debugging_line(str("east = ", east, ", margin = ", east_margin))
+    debugging_line(str("west = ", west, ", margin = ", west_margin))
     children();
 }
 
