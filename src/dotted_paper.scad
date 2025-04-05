@@ -12,11 +12,11 @@ step = space + line;
 corner_width = 0.3;
 corner_length = 1;
 
-margin = 0;
+margin = 4;
 north_margin = margin + 0;
 south_margin = margin + 0;
 east_margin = margin + 0;
-west_margin = margin + 0;
+west_margin = margin + 4;
 
 
 y_offset = ((paper_y-line-north_margin-south_margin)%step)/2;
@@ -144,6 +144,14 @@ module debug_edges() {
     debugging_scale("west");
 }
 
+module trim() {
+    // removes anything outside of paper
+    intersection() {
+	square([paper_x,paper_y]);
+	children();
+    }
+}
+
 module debug() {
     difference() {
 	children();
@@ -157,6 +165,7 @@ module debug() {
 
 // RENDER svg
 module bars_debug() {
+    trim()
     debug()
     bars();
     corners();
@@ -164,6 +173,7 @@ module bars_debug() {
 }
 
 module dots_debug() {
+    trim()
     debug()
     dots();
     corners();
