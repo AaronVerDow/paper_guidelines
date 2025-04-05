@@ -127,7 +127,7 @@ module debug_variables() {
     children();
 }
 
-module debug() {
+module debug_edges() {
     translate([paper_x/2,0])
     debugging_scale("south");
 
@@ -142,6 +142,26 @@ module debug() {
     translate([0,paper_y/2])
     rotate([0,0,-90])
     debugging_scale("west");
+}
+
+module debug() {
+    difference() {
+	children();
+	minkowski() {
+	    debug_edges();
+	    circle(d=5, $fn=6);
+	}
+    }
+    debug_edges();
+}
+
+// RENDER svg
+module dots_debug() {
+    debug()
+    dots();
+    corners();
+    debug_variables()
+    debugging_line(str("dot = ", dot));
 }
 
 difference() {
