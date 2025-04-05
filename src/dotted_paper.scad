@@ -11,8 +11,8 @@
 // put paper back in with printed dots up
 // print again
 
-x = 148;
-y = 210;
+paper_x = 148;
+paper_y = 210;
 dot = 1;
 $fn=45;
 
@@ -21,28 +21,26 @@ gap = 5;
 corner_width = 0.3;
 corner_length = 1;
 
-//square([x, y]);
-
 margin = 1;
 
 holes = 6.5;
 
 spacing = 1.5;
 
-extra = (y%(gap*spacing+gap))/2;
+extra = (paper_y%(gap*spacing+gap))/2;
 
 y_start = extra;
 y_end = extra-1;
 
 hole_margin = gap*2;
 
-x_margin = (x%gap)/2;
+x_margin = (paper_x%gap)/2;
 x_start = x_margin;
-x_end = x-x_margin-hole_margin;
+x_end = paper_x-x_margin-hole_margin;
 x_total = x_end-x_start;
 
 bar_y=gap*(spacing-1);
-bar_x=x-(x%gap);
+bar_x=paper_x-(paper_x%gap);
 
 
 width = bar_x;
@@ -82,42 +80,42 @@ module dirror_x(x=0) {
 module dots() {
     intersection() {
 	union() {
-	    translate([(x%gap)/2,0])
-	    for(i=[0:gap:x])
-	    for(j=[y-y_start:-gap*spacing:y_end])
+	    translate([(paper_x%gap)/2,0])
+	    for(i=[0:gap:paper_x])
+	    for(j=[paper_y-y_start:-gap*spacing:y_end])
 	    translate([i,j])
 	    circle(d=dot);
 
-	    translate([(x%gap)/2,0])
-	    for(i=[0:gap:x])
-	    for(j=[y-y_start-gap:-gap*spacing:y_end])
+	    translate([(paper_x%gap)/2,0])
+	    for(i=[0:gap:paper_x])
+	    for(j=[paper_y-y_start-gap:-gap*spacing:y_end])
 	    translate([i,j])
 	    circle(d=dot);
 	}
 
 	difference() {
 	    translate([margin, margin])
-	    square([x-margin*2,y-margin*2]);
-	    translate([x-holes,y])
-	    square([holes,y]);
+	    square([paper_x-margin*2,paper_y-margin*2]);
+	    translate([paper_x-holes,paper_y])
+	    square([holes,paper_y]);
 	}
     }
 
-    dirror_y(y)
-    dirror_x(x)
+    dirror_y(paper_y)
+    dirror_x(paper_x)
     corner();
 }
 
 // RENDER svg
 module bars() {
-    dirror_y(y)
-    dirror_x(x)
+    dirror_y(paper_y)
+    dirror_x(paper_x)
     corner();
 
     // full page
-    //for(j=[y-y_start-gap+gap*spacing:-gap*spacing:y_end])
-    for(j=[y-y_start-gap:-gap*spacing:y_end+gap*spacing])
-    translate([(x%gap)/2,j-gap*(spacing-1)])
+    //for(j=[paper_y-y_start-gap+gap*spacing:-gap*spacing:y_end])
+    for(j=[paper_y-y_start-gap:-gap*spacing:y_end+gap*spacing])
+    translate([(paper_x%gap)/2,j-gap*(spacing-1)])
     bar();
 }
 
