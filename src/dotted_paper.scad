@@ -156,6 +156,13 @@ module debug() {
 }
 
 // RENDER svg
+module bars_debug() {
+    debug()
+    bars();
+    corners();
+    debug_variables();
+}
+
 module dots_debug() {
     debug()
     dots();
