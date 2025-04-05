@@ -172,6 +172,13 @@ module bars_debug() {
     debug_variables();
 }
 
+// RENDER svg
+module bars_final() {
+    trim()
+    bars();
+    corners();
+}
+
 module dots_debug() {
     trim()
     debug()
