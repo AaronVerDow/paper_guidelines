@@ -9,6 +9,9 @@ space = grid;  // where to write
 line = grid/2; // thickness of line between spaces
 step = space + line;
 
+// thin lines
+stripe = 0.1;
+
 corner_width = 0.3;
 corner_length = 1;
 
@@ -69,6 +72,16 @@ module dots() {
     }
 }
 
+module lines() {
+    for(y=[south:step:north])
+    translate([west,y])
+    square([east-west,stripe]);
+
+    for(y=[south+ends:step:north])
+    translate([west,y])
+    square([east-west,stripe]);
+}
+
 module bars() {
     for(j=[south:step:north])
     translate([west,j])
@@ -77,18 +90,18 @@ module bars() {
 
 module debugging_scale(name="") {
 
-    fontsize = 5;
-    steps = 20;
+    fontsize = 3;
+    steps = 15;
 
     // deugging lines
     fives = 10;
     other = 6;
-    thickness = 0.3;
+    thickness = 0.1;
 
     translate([0,steps+2])
     text(name, halign="center", size=fontsize);
     
-    for(y=[0:1:steps])
+    for(y=[-steps:1:steps])
     translate([0,y])
     if (y%5 ==0) {
 	square([fives,thickness],center=true);
@@ -96,7 +109,7 @@ module debugging_scale(name="") {
 	square([other,thickness],center=true);
     }
 
-    for(y=[0:5:steps])
+    for(y=[-steps:5:steps])
     label(y);
 
     module label(y) {
@@ -132,18 +145,29 @@ module debug_variables() {
 }
 
 module debug_edges() {
-    translate([paper_x/2,0])
+    translate([paper_x/3,0])
+    debugging_scale("0");
+    translate([paper_x/3*2,south])
     debugging_scale("south");
 
-    translate([paper_x/2,paper_y])
+    translate([paper_x/3*2,paper_y])
+    rotate([0,0,180])
+    debugging_scale("paper_y");
+    translate([paper_x/3,north])
     rotate([0,0,180])
     debugging_scale("north");
 
-    translate([paper_x,paper_y/2])
+    translate([paper_x,paper_y/3])
+    rotate([0,0,90])
+    debugging_scale("paper_x");
+    translate([east,paper_y/3*2])
     rotate([0,0,90])
     debugging_scale("east");
 
-    translate([0,paper_y/2])
+    translate([0,paper_y/3*2])
+    rotate([0,0,-90])
+    debugging_scale("0");
+    translate([west,paper_y/3])
     rotate([0,0,-90])
     debugging_scale("west");
 }
@@ -165,6 +189,24 @@ module debug() {
 	}
     }
     debug_edges();
+}
+
+// RENDER svg
+module lines_debug() {
+    trim()
+    debug()
+    lines();
+    corners();
+    debug_variables()
+    debugging_line("")
+    debugging_line(str("stripe = ", stripe));
+}
+
+// RENDER svg
+module lines_final() {
+    trim()
+    bars();
+    corners();
 }
 
 // RENDER svg
@@ -204,11 +246,12 @@ module dots_final() {
 difference() {
     union() {
 	//bars();
-	dots();
+	//dots();
+	lines();
     }
     minkowski() {
 	debug();
-	circle(d=5, $fn=6);
+	circle(d=7, $fn=6);
     }
 }
 debug();
