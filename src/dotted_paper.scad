@@ -179,6 +179,7 @@ module bars_final() {
     corners();
 }
 
+// RENDER svg
 module dots_debug() {
     trim()
     debug()
@@ -187,6 +188,14 @@ module dots_debug() {
     debug_variables()
     debugging_line(str("dot = ", dot));
 }
+
+// RENDER svg
+module dots_final() {
+    trim()
+    dots();
+    corners();
+}
+
 
 difference() {
     union() {
