@@ -1,9 +1,12 @@
 # Paper Guidelines
 
-Create gridlines for printing custom notebook paper.
+Create gridlines for printing custom notebook paper. Lines are automatically filled and centered within the available space.
 
-Example dot grid with 1.5x line spacing and debugging enabled:
+Example with debugging guides enabled:
 
-![Debug Dots](media/dotted_paper_dots_debug.svg)
+![Debug Dots](media/sample.png)
 
-Work in progress.
+Dependencies:
+* openscad
+* [openscad-post-processor](https://github.com/AaronVerDow/openscad-post-processor)
+* librsvg
