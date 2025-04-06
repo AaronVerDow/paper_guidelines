@@ -146,7 +146,7 @@ module debug_variables() {
 
 module debug_edges() {
     translate([paper_x/3,0])
-    debugging_scale("0");
+    debugging_scale("x axis");
     translate([paper_x/3*2,south])
     debugging_scale("south");
 
@@ -166,7 +166,7 @@ module debug_edges() {
 
     translate([0,paper_y/3*2])
     rotate([0,0,-90])
-    debugging_scale("0");
+    debugging_scale("y axis");
     translate([west,paper_y/3])
     rotate([0,0,-90])
     debugging_scale("west");
