@@ -18,8 +18,12 @@ south_margin = margin + 0;
 east_margin = margin + 0;
 west_margin = margin + 4;
 
+// define what the top and bottom ends should be
+// dots can be line or space
+// bars must be line (for now)
+ends=space;
 
-y_offset = ((paper_y-line-north_margin-south_margin)%step)/2;
+y_offset = ((paper_y-ends-north_margin-south_margin)%step)/2;
 south = y_offset+south_margin;
 north = paper_y-y_offset-north_margin;
 
@@ -59,7 +63,7 @@ module dots() {
 	translate([x,y])
 	circle(d=dot);
 
-	for(y=[south+line:step:north])
+	for(y=[south+ends:step:north])
 	translate([x,y])
 	circle(d=dot);
     }
@@ -104,7 +108,7 @@ module debugging_scale(name="") {
     }
 }
 
-debugging_line_font_size=3.5;
+debugging_line_font_size=2.5;
 
 module debugging_line(message) {
     text(message, halign="center", valign="center", size=debugging_line_font_size);
@@ -113,7 +117,7 @@ module debugging_line(message) {
 }
 
 module debug_variables() {
-    translate([paper_x/2,north-step*6+space/2])
+    translate([paper_x/2,north-step*6+ends])
     debugging_line(str("grid = ", grid, ", space = ", space, ", line = ", line))
     debugging_line(str("global margin = ", margin))
     debugging_line("")
@@ -199,7 +203,7 @@ module dots_final() {
 
 difference() {
     union() {
-	bars();
+	//bars();
 	dots();
     }
     minkowski() {
