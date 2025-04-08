@@ -252,6 +252,12 @@ shrink_factor=0.987; // how much to shrink each line
 minimum_line=1.5; // prevents recursion
 challenge_text_scale=0.6;
 
+module shrinking_bar_label(new_height, height) {
+    rounded=floor(height/shrink_factor*100)/100;
+    translate([east-west,new_height/2])
+    text(str(rounded), size=new_height, valign="center", halign="right", font="Ubuntu:Bold");
+}
+
 module shrinking_bar(position, height, dark=false) {
     if ((height > minimum_line) && (position > south)) {
 	if (dark) {
@@ -260,11 +266,13 @@ module shrinking_bar(position, height, dark=false) {
 	    difference() {
 		square([east-west,new_height]);
 
-		rounded=floor(height/shrink_factor*100)/100;
-
-		translate([challenge_text_scale/2*new_height,new_height/2])
-		text(str(rounded), size=new_height*challenge_text_scale, valign="center");
+		minkowski() {
+		    shrinking_bar_label(new_height, height);
+		    circle(d=height/2);
+		}
 	    }
+	    translate([west,position-new_height])
+	    shrinking_bar_label(new_height, height);
 	    shrinking_bar(position-new_height,height*shrink_factor,!dark);
 	} else {
 	    shrinking_bar(position-height,height*shrink_factor,!dark);
