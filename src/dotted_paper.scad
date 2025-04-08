@@ -24,7 +24,7 @@ west_margin = margin + 4;
 // define what the top and bottom ends should be
 // dots can be line or space
 // bars must be line (for now)
-ends=space;
+ends=line;
 
 y_offset = ((paper_y-ends-north_margin-south_margin)%step)/2;
 south = y_offset+south_margin;
@@ -244,11 +244,65 @@ module dots_final() {
 }
 
 
+module shrinking_bar(position, height, dark=false) {
+    echo(height);
+    if ((height > minimum_line) && (position > south)) {
+	if (dark) {
+	    new_height = height*challenge_line_spacing;
+	    translate([west,position-new_height])
+	    square([east-west,new_height]);
+	    shrinking_bar(position-new_height,height*shrink_factor,!dark);
+	} else {
+	    shrinking_bar(position-height,height*shrink_factor,!dark);
+	}
+    }
+}
+
+// mode where lines get progressively smaller
+
+challenge_header = 0.3; // guide line above first space
+challenge_start=7;      // largest area to write
+challenge_line_spacing=0.5; // spacing between lines
+shrink_factor=0.975; // how much to shrink each line
+minimum_line=0.1; // prevents recursion
+
+module challenge() {
+    // lines get progressively smaller
+    translate([west,north-challenge_header])
+    square([east-west,challenge_header]);
+    shrinking_bar(north-challenge_header, challenge_start);
+}
+
+module flipped() {
+    // use to print double sided patters that are not symmetrical
+    translate([paper_x,0])
+    mirror([1,0,0])
+    children();
+}
+
+// RENDER svg
+module challenge_final() {
+    trim()
+    challenge();
+    corners();
+}
+
+// RENDER svg
+module challenge_flipped() {
+    flipped()
+    challenge_final();
+}
+
+module challenge_debug() {
+}
+
+
 difference() {
     union() {
-	//bars();
+	bars();
 	//dots();
-	lines();
+	//lines();
+	//challenge();
     }
     minkowski() {
 	debug();
