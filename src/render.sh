@@ -3,7 +3,8 @@ set -exuo pipefail
 
 openscad-render dotted_paper.scad
 
-color=${1:-#f0f0f0}
+color=${1:-black}
+#color=${1:-#f0f0f0}
 
 # pkg librsvg
 
