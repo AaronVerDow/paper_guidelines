@@ -243,21 +243,6 @@ module dots_final() {
     corners();
 }
 
-
-module shrinking_bar(position, height, dark=false) {
-    echo(height);
-    if ((height > minimum_line) && (position > south)) {
-	if (dark) {
-	    new_height = height*challenge_line_spacing;
-	    translate([west,position-new_height])
-	    square([east-west,new_height]);
-	    shrinking_bar(position-new_height,height*shrink_factor,!dark);
-	} else {
-	    shrinking_bar(position-height,height*shrink_factor,!dark);
-	}
-    }
-}
-
 // mode where lines get progressively smaller
 
 challenge_header = 0.3; // guide line above first space
@@ -265,6 +250,29 @@ challenge_start=5;      // largest area to write
 challenge_line_spacing=0.5; // spacing between lines
 shrink_factor=0.987; // how much to shrink each line
 minimum_line=1.5; // prevents recursion
+challenge_text_scale=0.6;
+
+module shrinking_bar(position, height, dark=false) {
+    if ((height > minimum_line) && (position > south)) {
+	if (dark) {
+	    new_height = height*challenge_line_spacing;
+	    translate([west,position-new_height])
+	    difference() {
+		square([east-west,new_height]);
+
+		rounded=floor(height/shrink_factor*100)/100;
+
+		translate([challenge_text_scale/2*new_height,new_height/2])
+		text(str(rounded), size=new_height*challenge_text_scale, valign="center");
+	    }
+	    shrinking_bar(position-new_height,height*shrink_factor,!dark);
+	} else {
+	    shrinking_bar(position-height,height*shrink_factor,!dark);
+	}
+    } else {
+	echo(str("Final height: ", height));
+    }
+}
 
 module challenge() {
     // lines get progressively smaller
@@ -296,13 +304,14 @@ module challenge_flipped() {
 module challenge_debug() {
 }
 
+!challenge();
 
 difference() {
     union() {
-	bars();
+	//bars();
 	//dots();
 	//lines();
-	//challenge();
+	challenge();
     }
     minkowski() {
 	debug();
