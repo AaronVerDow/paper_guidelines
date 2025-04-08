@@ -248,7 +248,7 @@ module dots_final() {
 challenge_header = 0.3; // guide line above first space
 challenge_start=5;      // largest area to write
 challenge_line_spacing=0.5; // spacing between lines
-shrink_factor=0.987; // how much to shrink each line
+shrink_factor=0.9885; // how much to shrink each line
 minimum_line=1.5; // prevents recursion
 challenge_text_scale=0.6;
 
