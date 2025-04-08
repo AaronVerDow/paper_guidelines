@@ -252,10 +252,18 @@ shrink_factor=0.987; // how much to shrink each line
 minimum_line=1.5; // prevents recursion
 challenge_text_scale=0.6;
 
+// returns a string rounded and formatted to two decimal places
+function format_two_decimals(x) = 
+    let (
+        integer_part = floor(x),
+        fractional_part = round((x - integer_part) * 100),
+        padded_fraction = fractional_part < 10 ? str("0", fractional_part) : str(fractional_part)
+    )
+    str(integer_part, ".", padded_fraction);
+
 module shrinking_bar_label(new_height, height) {
-    rounded=floor(height/shrink_factor*100)/100;
     translate([east-west,new_height/2])
-    text(str(rounded), size=new_height, valign="center", halign="right", font="Ubuntu:Bold");
+    text(format_two_decimals(height/shrink_factor), size=new_height, valign="center", halign="right", font="Ubuntu:Bold");
 }
 
 module shrinking_bar(position, height, dark=false) {
