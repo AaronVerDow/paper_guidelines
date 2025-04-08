@@ -261,10 +261,10 @@ module shrinking_bar(position, height, dark=false) {
 // mode where lines get progressively smaller
 
 challenge_header = 0.3; // guide line above first space
-challenge_start=7;      // largest area to write
+challenge_start=5;      // largest area to write
 challenge_line_spacing=0.5; // spacing between lines
-shrink_factor=0.975; // how much to shrink each line
-minimum_line=0.1; // prevents recursion
+shrink_factor=0.987; // how much to shrink each line
+minimum_line=1.5; // prevents recursion
 
 module challenge() {
     // lines get progressively smaller
