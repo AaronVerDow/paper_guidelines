@@ -1,26 +1,29 @@
-// Main options
+// Paper Options
 paper_x = 148;
 paper_y = 210;
-space = 5;  // where to write
-line = space/2; // thickness of line between spaces
 margin = 4;
 north_margin = margin + 0;
 south_margin = margin + 0;
 east_margin = margin + 0;
 west_margin = margin + 4;
 
+// Common Options
+space = 5;  // where to write
+line = space/2; // thickness of line between spaces
+ends = line;
+grid = space;
+
 // Dot options
 $fn=6;
 dot = 1;
-grid = space;
-ends = line;
 
 // Line options
 stripe = 0.1;
-// ends = line;
+// grid = 0
 
 // Bar options
-// ends = space;
+// ends must be space
+// grid = 0
 
 // Challenge options
 challenge_header = 0.3; // guide line above first space
@@ -44,6 +47,48 @@ north = paper_y-y_offset-north_margin;
 x_offset = ((paper_x-east_margin-west_margin)%grid)/2;
 west = x_offset+west_margin;
 east = paper_x-x_offset-east_margin;
+
+// UTILITIES ============================================
+
+module dirror_y(y=0) {
+    children();
+    translate([0,y])
+    mirror([0,1])
+    children();
+}
+
+module dirror_x(x=0) {
+    children();
+    translate([x,0])
+    mirror([1,0])
+    children();
+}
+
+module trim() {
+    // removes anything outside of paper
+    intersection() {
+	square([paper_x,paper_y]);
+	children();
+    }
+}
+
+// returns a string rounded and formatted to two decimal places
+function format_two_decimals(x) = 
+    let (
+        integer_part = floor(x),
+        fractional_part = round((x - integer_part) * 100),
+        padded_fraction = fractional_part < 10 ? str("0", fractional_part) : str(fractional_part)
+    )
+    str(integer_part, ".", padded_fraction);
+
+module flipped() {
+    // use to print double sided patters that are not symmetrical
+    translate([paper_x,0])
+    mirror([1,0,0])
+    children();
+}
+
+// CORNERS ============================================
 
 module corner() {
     square([corner_width,corner_length]);
@@ -239,45 +284,7 @@ module dots_final() {
     corners();
 }
 
-// UTILITIES ============================================
 
-module dirror_y(y=0) {
-    children();
-    translate([0,y])
-    mirror([0,1])
-    children();
-}
-
-module dirror_x(x=0) {
-    children();
-    translate([x,0])
-    mirror([1,0])
-    children();
-}
-
-module trim() {
-    // removes anything outside of paper
-    intersection() {
-	square([paper_x,paper_y]);
-	children();
-    }
-}
-
-// returns a string rounded and formatted to two decimal places
-function format_two_decimals(x) = 
-    let (
-        integer_part = floor(x),
-        fractional_part = round((x - integer_part) * 100),
-        padded_fraction = fractional_part < 10 ? str("0", fractional_part) : str(fractional_part)
-    )
-    str(integer_part, ".", padded_fraction);
-
-module flipped() {
-    // use to print double sided patters that are not symmetrical
-    translate([paper_x,0])
-    mirror([1,0,0])
-    children();
-}
 
 // CHALLENGE ============================================
 
