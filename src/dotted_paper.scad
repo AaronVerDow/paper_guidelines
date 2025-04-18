@@ -1,35 +1,46 @@
+// Main options
 paper_x = 148;
 paper_y = 210;
-dot = 1;
-
-$fn=6;
-
-grid = 5;
-space = grid;  // where to write
-line = grid/2; // thickness of line between spaces
-step = space + line;
-
-// thin lines
-stripe = 0.1;
-
-corner_width = 0.3;
-corner_length = 1;
-
+space = 5;  // where to write
+line = space/2; // thickness of line between spaces
 margin = 4;
 north_margin = margin + 0;
 south_margin = margin + 0;
 east_margin = margin + 0;
 west_margin = margin + 4;
 
-// define what the top and bottom ends should be
-// dots can be line or space
-// bars must be line (for now)
-ends=line;
+// Dot options
+$fn=6;
+dot = 1;
+grid = space;
+ends = line;
 
+// Line options
+stripe = 0.1;
+// ends = line;
+
+// Bar options
+// ends = space;
+
+// Challenge options
+challenge_header = 0.3; // guide line above first space
+challenge_start=10;      // largest area to write
+challenge_line_spacing=0.5; // spacing between lines
+// challenge_start=5;      // largest area to write
+//shrink_factor=0.9885; // how much to shrink each line
+shrink_factor=0.9655; // how much to shrink each line
+minimum_line=1; // prevents recursion
+
+// Constants
+corner_width = 0.3;
+corner_length = 1;
+debugging_line_font_size=2.5;
+
+// Math
+step = space + line;
 y_offset = ((paper_y-ends-north_margin-south_margin)%step)/2;
 south = y_offset+south_margin;
 north = paper_y-y_offset-north_margin;
-
 x_offset = ((paper_x-east_margin-west_margin)%grid)/2;
 west = x_offset+west_margin;
 east = paper_x-x_offset-east_margin;
@@ -46,47 +57,7 @@ module corners() {
     corner();
 }
 
-module dirror_y(y=0) {
-    children();
-    translate([0,y])
-    mirror([0,1])
-    children();
-}
-
-module dirror_x(x=0) {
-    children();
-    translate([x,0])
-    mirror([1,0])
-    children();
-}
-
-module dots() {
-    for(x=[west:grid:east]) {
-	for(y=[south:step:north])
-	translate([x,y])
-	circle(d=dot);
-
-	for(y=[south+ends:step:north])
-	translate([x,y])
-	circle(d=dot);
-    }
-}
-
-module lines() {
-    for(y=[south:step:north])
-    translate([west,y])
-    square([east-west,stripe]);
-
-    for(y=[south+ends:step:north])
-    translate([west,y])
-    square([east-west,stripe]);
-}
-
-module bars() {
-    for(j=[south:step:north])
-    translate([west,j])
-    square([east-west,line]);
-}
+// DEBUG ============================================
 
 module debugging_scale(name="") {
 
@@ -120,8 +91,6 @@ module debugging_scale(name="") {
 	text(str(y), halign="right", valign="center", size=2);
     }
 }
-
-debugging_line_font_size=2.5;
 
 module debugging_line(message) {
     text(message, halign="center", valign="center", size=debugging_line_font_size);
@@ -172,14 +141,6 @@ module debug_edges() {
     debugging_scale("west");
 }
 
-module trim() {
-    // removes anything outside of paper
-    intersection() {
-	square([paper_x,paper_y]);
-	children();
-    }
-}
-
 module debug() {
     difference() {
 	children();
@@ -190,6 +151,19 @@ module debug() {
     }
     debug_edges();
 }
+
+// LINES ============================================
+
+module lines() {
+    for(y=[south:step:north])
+    translate([west,y])
+    square([east-west,stripe]);
+
+    for(y=[south+ends:step:north])
+    translate([west,y])
+    square([east-west,stripe]);
+}
+
 
 // RENDER svg
 // RENDER svg2png
@@ -210,6 +184,14 @@ module lines_final() {
     corners();
 }
 
+// BARS ============================================
+
+module bars() {
+    for(j=[south:step:north])
+    translate([west,j])
+    square([east-west,line]);
+}
+
 // RENDER svg
 module bars_debug() {
     trim()
@@ -224,6 +206,20 @@ module bars_final() {
     trim()
     bars();
     corners();
+}
+
+// DOTS ============================================
+
+module dots() {
+    for(x=[west:grid:east]) {
+	for(y=[south:step:north])
+	translate([x,y])
+	circle(d=dot);
+
+	for(y=[south+ends:step:north])
+	translate([x,y])
+	circle(d=dot);
+    }
 }
 
 // RENDER svg
@@ -243,16 +239,29 @@ module dots_final() {
     corners();
 }
 
-// mode where lines get progressively smaller
+// UTILITIES ============================================
 
-challenge_header = 0.3; // guide line above first space
-// challenge_start=5;      // largest area to write
-challenge_start=10;      // largest area to write
-challenge_line_spacing=0.5; // spacing between lines
-//shrink_factor=0.9885; // how much to shrink each line
-shrink_factor=0.9655; // how much to shrink each line
-minimum_line=1; // prevents recursion
-challenge_text_scale=0.6;
+module dirror_y(y=0) {
+    children();
+    translate([0,y])
+    mirror([0,1])
+    children();
+}
+
+module dirror_x(x=0) {
+    children();
+    translate([x,0])
+    mirror([1,0])
+    children();
+}
+
+module trim() {
+    // removes anything outside of paper
+    intersection() {
+	square([paper_x,paper_y]);
+	children();
+    }
+}
 
 // returns a string rounded and formatted to two decimal places
 function format_two_decimals(x) = 
@@ -263,9 +272,18 @@ function format_two_decimals(x) =
     )
     str(integer_part, ".", padded_fraction);
 
+module flipped() {
+    // use to print double sided patters that are not symmetrical
+    translate([paper_x,0])
+    mirror([1,0,0])
+    children();
+}
+
+// CHALLENGE ============================================
+
 module shrinking_bar_label(new_height, height) {
     translate([east-west,new_height/2])
-    text(format_two_decimals(height/shrink_factor), size=new_height, valign="center", halign="right", font="Ubuntu:Bold");
+    text(format_two_decimals(height/shrink_factor), size=new_height, valign="center", halign="right", font="ubuntu:bold");
 }
 
 module shrinking_bar(position, height, dark=false) {
@@ -288,7 +306,7 @@ module shrinking_bar(position, height, dark=false) {
 	    shrinking_bar(position-height,height*shrink_factor,!dark);
 	}
     } else {
-	echo(str("Final height: ", height));
+	echo(str("final height: ", height));
     }
 }
 
@@ -297,13 +315,6 @@ module challenge() {
     translate([west,north-challenge_header])
     square([east-west,challenge_header]);
     shrinking_bar(north-challenge_header, challenge_start);
-}
-
-module flipped() {
-    // use to print double sided patters that are not symmetrical
-    translate([paper_x,0])
-    mirror([1,0,0])
-    children();
 }
 
 // RENDER svg
@@ -322,20 +333,4 @@ module challenge_flipped() {
 module challenge_debug() {
 }
 
-!challenge();
-
-difference() {
-    union() {
-	//bars();
-	//dots();
-	//lines();
-	challenge();
-    }
-    minkowski() {
-	debug();
-	circle(d=7, $fn=6);
-    }
-}
-debug();
-debug_variables();
-corners();
+bars_final();
