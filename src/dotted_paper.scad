@@ -1,3 +1,64 @@
+// Common Options
+space = 5;  // where to write
+line = space/2; // thickness of line between spaces
+ends = line;
+
+lihit_a5 = paper(
+    x = 148,
+    y = 210,
+    north = 4,
+    south = 4,
+    east = 4,
+    west = 8
+);
+
+paper = lihit_a5;
+
+function paper(
+    x,
+    y,
+    north,
+    south,
+    east,
+    west,
+    space = 5,
+    line = 2.5,
+    ends = "line"
+) = [ x, y, north, south, east, west, space, line, ends];
+
+function x(p) = p[0];
+function y(p) = p[1];
+function n(p) = p[2];
+function s(p) = p[3];
+function e(p) = p[4];
+function w(p) = p[5];
+function space(p) = p[6];
+
+function line(p) = p[7];
+function ends(p) = (p[8] == "space") 
+    ? space(p) 
+    : line(p);
+
+grid = space; // deal with this later
+
+function step(p) = space(p)+line(p);
+function y_offset(p) = ((y(p)-ends(p)-n(p)-s(p))%step(p))/2;
+function south(p) = y_offset(p)+s(p);
+function north(p) = y(p)-y_offset(p)-n(p);
+function x_offset(p) = (x(p)-e(p)-w(p))/2; // no grid
+function west(p) = x_offset(p)+w(p);
+function east(p) = x(p)-x_offset(p)-e(p);
+
+// Math
+step = space(paper) + line(paper);
+y_offset = ((y(paper)-ends(paper)-n(paper)-s(paper))%step)/2;
+south = y_offset+s(paper);
+north = y(paper)-y_offset-n(paper);
+x_offset = ((x(paper)-e(paper)-w(paper))%grid)/2;
+west = x_offset+w(paper);
+east = x(paper)-x_offset-e(paper);
+
+
 // Paper Options
 paper_x = 148;
 paper_y = 210;
@@ -7,23 +68,15 @@ south_margin = margin + 0;
 east_margin = margin + 0;
 west_margin = margin + 4;
 
-// Common Options
-space = 5;  // where to write
-line = space/2; // thickness of line between spaces
-ends = line;
-grid = space;
-
 // Dot options
 $fn=6;
 dot = 1;
 
 // Line options
 stripe = 0.1;
-// grid = 0
 
 // Bar options
 // ends must be space
-// grid = 0
 
 // Challenge options
 challenge_header = 0.3; // guide line above first space
@@ -38,15 +91,6 @@ minimum_line=1; // prevents recursion
 corner_width = 0.3;
 corner_length = 1;
 debugging_line_font_size=2.5;
-
-// Math
-step = space + line;
-y_offset = ((paper_y-ends-north_margin-south_margin)%step)/2;
-south = y_offset+south_margin;
-north = paper_y-y_offset-north_margin;
-x_offset = ((paper_x-east_margin-west_margin)%grid)/2;
-west = x_offset+west_margin;
-east = paper_x-x_offset-east_margin;
 
 // UTILITIES ============================================
 
