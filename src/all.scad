@@ -1,7 +1,18 @@
 include <bars.scad>;
 include <challenge.scad>;
 include <paper.scad>;
+include <dots.scad>;
 // NOPREVIEW
+
+// RENDER svg
+module half_dots_a5_5mm() {
+    dots(lihit_a5(ends="space"), dot_options());
+}
+
+// RENDER svg
+module dots_a5_5mm() {
+    dots(lihit_a5(line=0, ends="space"), dot_options());
+}
 
 // RENDER svg
 module challenge_a5() {
@@ -33,7 +44,7 @@ module bars_a5_5mm_back() {
 // 4.0 =========================================
 
 // RENDER svg
-module bars_a5_4() {
+module bars_a5_4mm() {
     bars(lihit_a5(4), "4.0");
 };
 
