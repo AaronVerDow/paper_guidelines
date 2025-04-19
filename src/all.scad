@@ -1,6 +1,17 @@
 include <bars.scad>;
+include <challenge.scad>;
 include <paper.scad>;
 // NOPREVIEW
+
+// RENDER svg
+module challenge_a5() {
+    challenge(lihit_a5());
+}
+
+// RENDER svg
+module challenge_a5_back() {
+    challenge(mirror_paper(lihit_a5()));
+}
 
 // RENDER svg
 module bars_a5_5mm_debug() {

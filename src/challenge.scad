@@ -65,12 +65,6 @@ module inner_challenge(p, m) {
     shrinking_bar(p, m, north(p)-header(m), start(m));
 }
 
-module challenge(p, m) {
-    trim(p)
-    inner_challenge(p, m);
-    corners(p);
-}
-
 module challenge_debug(p, m) {
     trim(p)
     debug(p, [
@@ -84,9 +78,15 @@ module challenge_debug(p, m) {
     corners(p);
 }
 
-module challenge_back(p, m) {
+module challenge_back(p, m=hard_mode) {
     trim(p)
     inner_challenge(mirror_paper(p), m);
+    corners(p);
+}
+
+module challenge(p, m=hard_mode) {
+    trim(p)
+    inner_challenge(p, m);
     corners(p);
 }
 
