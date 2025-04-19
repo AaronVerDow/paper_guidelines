@@ -1,7 +1,7 @@
 # quick and dirty rendering script
 set -exuo pipefail
 
-openscad-render dotted_paper.scad
+openscad-render all.scad
 
 color=${1:-black}
 #color=${1:-#f0f0f0}
