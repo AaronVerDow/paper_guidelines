@@ -13,7 +13,7 @@ function paper(
     east,
     west,
     space = 5,
-    line = 2.5,
+    line = 0.5,
     ends = "line",
     mirrored = false
 ) = [ x, y, north, south, east, west, space, line, ends, mirrored];
@@ -26,7 +26,7 @@ function mirror_paper(p) = [
     w(p), // flip east and west
     e(p),
     space(p),
-    line(p),
+    p[7],
     p[8],
     true
 ];
@@ -39,7 +39,7 @@ function e(p) = p[4];
 function w(p) = p[5];
 function space(p) = p[6];
 
-function line(p) = p[7];
+function line(p) = p[7] * space(p);
 function ends(p) = (p[8] == "space") 
     ? space(p) 
     : line(p);

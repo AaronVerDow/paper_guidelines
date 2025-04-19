@@ -90,7 +90,7 @@ module challenge_back(p, m) {
     corners(p);
 }
 
-paper = lihit_a5_5mm_1o5x();
+paper = lihit_a5();
 mode = hard_mode;
 challenge_debug(paper, mode);
 

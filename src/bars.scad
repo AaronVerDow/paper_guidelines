@@ -26,9 +26,15 @@ module bars_debug(p, label="") {
 }
 
 module bar_label(p, label) {
-    translate([east(p),north(p)])
-    text(label, halign="right", valign="top", size=line(p), font="Ubuntu:bold");
+    if (mirrored(p)) {
+	translate([west(p),north(p)])
+	text(label, halign="left", valign="top", size=line(p), font="Ubuntu:bold");
+    } else {
+	translate([east(p),north(p)])
+	text(label, halign="right", valign="top", size=line(p), font="Ubuntu:bold");
+    }
 }
+
 
 module bars(p, label="") {
     trim(p)
@@ -36,4 +42,4 @@ module bars(p, label="") {
     corners(p);
 }
 
-bars_debug(lihit_a5_5mm_1o5x(ends="line"), "1.5x 5.0");
+bars_debug(mirror_paper(lihit_a5()), "1.5x 5.0");
