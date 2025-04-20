@@ -2,16 +2,37 @@
 
 Create gridlines for printing custom notebook paper. Lines are automatically filled and centered within the available space.
 
-Example with debugging guides enabled:
-
-![Debug Dots](media/sample.png)
-
 Dependencies:
 * openscad
 * [openscad-post-processor](https://github.com/AaronVerDow/openscad-post-processor)
 * librsvg
 
-## Printing 
+# Types
+
+## Dots
+
+![](media/all_dots_a5_5mm.png)
+
+## Half Dots
+
+![](media/all_half_dots_a5_5mm.png)
+
+## Lines
+
+![](media/all_lines_a5_5mm.png)
+
+## Half Lines
+
+![](media/all_half_lines_a5_5mm.png)
+
+## Bars
+
+Print solid black and place behind blank paper.
+
+![](media/all_bars_a5_5mm.png)
+
+
+# Printing 
 
 Brother HL-L2340DW
 

@@ -1,5 +1,5 @@
 # quick and dirty rendering script
-set -exuo pipefail
+set -euo pipefail
 
 openscad-render all.scad
 
@@ -10,9 +10,11 @@ color=${1:-black}
 
 for input in $( find ./output/ | grep 'svg$'); do
 	output=${input//svg/pdf}
+	thumbnail="../media/$( basename "$output" | sed 's/pdf$/png/' )"
 	sed -i 's/stroke="black"//g' "$input"
 	sed -i "s/lightgray/$color/g" "$input"
 	rsvg-convert -f pdf -o "$output" "$input"
+	magick -background white "$output" -flatten "$thumbnail"
 	rm "$input"
 done
 
