@@ -2,7 +2,18 @@ include <bars.scad>;
 include <challenge.scad>;
 include <paper.scad>;
 include <dots.scad>;
+include <lines.scad>;
 // NOPREVIEW
+
+// RENDER svg
+module half_lines_a5_5mm() {
+    lines(lihit_a5(ends="space"));
+}
+
+// RENDER svg
+module lines_a5_5mm() {
+    lines(lihit_a5(line=0, ends="space"));
+}
 
 // RENDER svg
 module half_dots_a5_5mm() {
