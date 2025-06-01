@@ -27,8 +27,18 @@ module dots_a5_5mm() {
 }
 
 // RENDER svg
+module half_grid_a5_5mm() {
+    grid(lihit_a5(ends="space"), grid_options());
+}
+
+// RENDER svg
 module grid_a5_5mm() {
     grid(lihit_a5(line=0, ends="space"), grid_options());
+}
+
+// RENDER svg
+module grid_a5_5mm_debug() {
+    grid_debug(lihit_a5(ends="space"), grid_options());
 }
 
 // RENDER svg
