@@ -23,7 +23,7 @@ module lines_debug(p, stripe=0.3) {
     trim(p)
     debug(p, [str("stripe = ", stripe)])
     inner_lines(p, stripe);
-    corners();
+    corners(p);
 }
 
 // RENDER svg

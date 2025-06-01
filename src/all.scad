@@ -3,6 +3,7 @@ include <challenge.scad>;
 include <paper.scad>;
 include <dots.scad>;
 include <lines.scad>;
+include <grid.scad>;
 // NOPREVIEW
 
 // RENDER svg
@@ -23,6 +24,11 @@ module half_dots_a5_5mm() {
 // RENDER svg
 module dots_a5_5mm() {
     dots(lihit_a5(line=0, ends="space"), dot_options());
+}
+
+// RENDER svg
+module grid_a5_5mm() {
+    grid(lihit_a5(line=0, ends="space"), grid_options());
 }
 
 // RENDER svg
