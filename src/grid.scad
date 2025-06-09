@@ -5,11 +5,13 @@ include <debug.scad>;
 
 function grid_options(
     grid=5,
-    line_width=0.1
-) = [grid, line_width];
+    line_width=0.1,
+    label=""
+) = [grid, line_width, label];
 
 function grid_spacing(o) = o[0];
 function line_width(o) = o[1];
+function label(o) = o[2];
 
 // grid variants of east/west to space grid lines evenly within margins
 // debug currently does not account for this
@@ -41,6 +43,13 @@ module inner_grid(p, o) {
     for(x=[gwest(p, o):grid_spacing(o):geast(p, o)]) {
         grid_line_vertical(p, x, o);
     }
+
+    grid_label(p, o);
+}
+
+module grid_label(p, o) {
+    translate([east(p)-grid_spacing(o),north(p)])
+    text(label(o), halign="center", valign="top", size=grid_spacing(o), font="Ubuntu:bold");
 }
 
 module grid_debug(p, o) {
@@ -59,4 +68,4 @@ module grid(p, o) {
     corners(p);
 }
 
-grid_debug(lihit_a5(ends="space"), grid_options()); 
+grid_debug(lihit_a5(line=0, ends="space"), grid_options(label="5.0"));

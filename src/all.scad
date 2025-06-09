@@ -27,13 +27,13 @@ module dots_a5_5mm() {
 }
 
 // RENDER svg
-module half_grid_a5_5mm() {
-    grid(lihit_a5(ends="space"), grid_options());
+module grid_a5_5mm() {
+    grid(lihit_a5(line=0, ends="space"), grid_options(label="5.0"));
 }
 
 // RENDER svg
-module grid_a5_5mm() {
-    grid(lihit_a5(line=0, ends="space"), grid_options());
+module grid_a5_3mm() {
+    grid(lihit_a5(3, line=0, ends="space"), grid_options(grid=3, label="3.0"));
 }
 
 // RENDER svg
