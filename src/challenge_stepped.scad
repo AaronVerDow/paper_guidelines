@@ -3,8 +3,26 @@ include <corners.scad>;
 include <paper.scad>;
 include <debug.scad>;
 
-// https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/List_Comprehensions
+function challenge_mode(
+    start=10,
+    spacing=0.5,
+    step=1,
+    header=0.3,
+    cutoff=2
+) = [start, spacing, step, header, cutoff];
+
+large_mode = challenge_mode();
+
+small_mode = challenge_mode(start=7, cutoff=1);
+
+function start(m) = m[0];
+function spacing(m) = m[1];
+function step(m) = m[2];
+function header(m) = m[3];
+function cutoff(m) = m[4];
+
 function quicksort(arr) = !(len(arr)>0) ? [] : let(
+
     pivot   = arr[floor(len(arr)/2)],
     lesser  = [ for (y = arr) if (y  < pivot) y ],
     equal   = [ for (y = arr) if (y == pivot) y ],
@@ -15,10 +33,12 @@ function quicksort(arr) = !(len(arr)>0) ? [] : let(
 
 function total_line(height, spacing) = height + height * spacing;
 
+// Reset current to minimum once maximum is surpassed
 function loop_current(maximum, minimum, current) = (current > maximum) 
     ? minimum
     : current;
 
+// Lower maximum once a line does not fit on page, the restart from minimum
 function reset_max(maximum, minimum, step, spacing, space, current, array=[]) = 
     (
 	(current <= minimum) ||
@@ -28,26 +48,14 @@ function reset_max(maximum, minimum, step, spacing, space, current, array=[]) =
     ? quicksort(array)
     : cutlist(current - step, minimum, step, spacing, space, minimum, array);
 
+// Fill in space staring with smallest lines and moving up. 
+// Repeat until lines no longer fit.
+// This will repeat lines until space is filled, preferring to repeat smaller lines.
 function cutlist(maximum, minimum, step, spacing, space, current, array=[]) = 
     (space > total_line(current, spacing))
     ? cutlist(maximum, minimum, step, spacing, space-total_line(current, spacing), loop_current(maximum, minimum, current+step), concat(array, [current]))
     : reset_max(maximum, minimum, step, spacing, space, current, array);
 
-function challenge_mode(
-    start=7,
-    spacing=0.5,
-    step=0.5,
-    header=0.3,
-    cutoff=1.5
-) = [start, spacing, step, header, cutoff];
-
-function start(m) = m[0];
-function spacing(m) = m[1];
-function step(m) = m[2];
-function header(m) = m[3];
-function cutoff(m) = m[4];
-
-hard_mode=challenge_mode();
 
 module shrinking_bar_label(p, m, new_height, height) {
     module label(m, halign="right") {
@@ -92,7 +100,6 @@ module shrinking_bar(p, m, cutlist, position, n, dark=false) {
 }
 
 module inner_challenge(p, m) {
-
     cutlist = cutlist(
 	maximum = start(m), 
 	minimum = cutoff(m),
@@ -122,21 +129,18 @@ module challenge_debug(p, m) {
     corners(p);
 }
 
-module challenge_back(p, m=hard_mode) {
+module challenge_back(p, m=large_mode) {
     trim(p)
     inner_challenge(mirror_paper(p), m);
     corners(p);
 }
 
-module challenge(p, m=hard_mode) {
+module challenge_stepped(p, m=large_mode) {
     trim(p)
     inner_challenge(p, m);
     corners(p);
 }
 
 paper = lihit_a5();
-mode = hard_mode;
+mode = large_mode;
 challenge_debug(paper, mode);
-
-//translate([-x(paper),0]) 
-//challenge_back(paper, mode);
