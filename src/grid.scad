@@ -30,6 +30,14 @@ module grid_line_vertical(p, x, o) {
 }
 
 module inner_grid(p, o) {
+    difference() {
+        inner_inner_grid(p, o);
+        grid_label(p, o);
+    }
+    hollow_grid_label(p, o);
+}
+
+module inner_inner_grid(p, o) {
     // Horizontal lines
     for(y=[south(p):step(p):north(p)]) {
         grid_line_horizontal(p, y, o);
@@ -44,7 +52,14 @@ module inner_grid(p, o) {
         grid_line_vertical(p, x, o);
     }
 
-    grid_label(p, o);
+}
+
+module hollow_grid_label(p, o) {
+    difference() {
+        grid_label(p, o);
+        offset(-line_width(o))
+        grid_label(p, o);
+    }
 }
 
 module grid_label(p, o) {
