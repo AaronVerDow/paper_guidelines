@@ -77,14 +77,13 @@ module trim(p) {
     }
 }
 
-function format_two_decimals(x) = 
+function format_one_decimal(x) = 
     // returns a string rounded and formatted to two decimal places
     let (
         integer_part = floor(x),
-        fractional_part = round((x - integer_part) * 100),
-        padded_fraction = fractional_part < 10 ? str("0", fractional_part) : str(fractional_part)
+        fractional_part = round((x - integer_part) * 10)
     )
-    str(integer_part, ".", padded_fraction);
+    str(integer_part, ".", fractional_part);
 
 module flipped(p) {
     // use to print double sided patters that are not symmetrical

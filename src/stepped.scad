@@ -83,23 +83,25 @@ function cutlist_large(maximum, minimum, step, spacing, space, current, array=[]
     : decrement_max(maximum, minimum, step, spacing, space, current, array);
 
 
-module shrinking_step_label(p, m, new_height, height) {
+module shrinking_step_label(p, m, new_height, height, last_label) {
     module label(m, halign="right") {
-	text(format_two_decimals(height), size=new_height, valign="center", halign=halign, font="ubuntu:bold");
+	text(format_one_decimal(height), size=new_height, valign="center", halign=halign, font="ubuntu:bold");
     }
     // echo("label = ", height);
     // remove false to put flipped numbers on left hand side
     // looks worse but harder to write on
-    if (mirrored(p) && false) {
-	translate([0,new_height/2])
-	label(m, "left");
-    } else {
-	translate([east(p)-west(p),new_height/2])
-	label(m);
+    if (last_label != height) {
+	if (mirrored(p) && false) {
+	    translate([0,new_height/2])
+	    label(m, "left");
+	} else {
+	    translate([east(p)-west(p),new_height/2])
+	    label(m);
+	}
     }
 }
 
-module shrinking_step(p, m, cutlist, position, n, dark=false) {
+module shrinking_step(p, m, cutlist, position, n, dark=false, last_label=0) {
     // echo("n = ", n);
     // echo("height = ", cutlist[n]);
     height = cutlist[n];
@@ -111,16 +113,16 @@ module shrinking_step(p, m, cutlist, position, n, dark=false) {
 	    difference() { // the actual bar
 		square([east(p)-west(p),new_height]);
 		minkowski() {
-		    shrinking_step_label(p, m, new_height, height);
+		    shrinking_step_label(p, m, new_height, height, last_label);
 		    circle(d=height/2);
 		}
 	    }
 	    translate([west(p),position-new_height])
-	    shrinking_step_label(p, m, new_height, height);
-	    shrinking_step(p, m, cutlist, position-new_height,n - 1,!dark);
+	    shrinking_step_label(p, m, new_height, height, last_label);
+	    shrinking_step(p, m, cutlist, position-new_height,n - 1,!dark, height);
 	} else {
 	    // echo("light");
-	    shrinking_step(p, m, cutlist, position-height,n,!dark);
+	    shrinking_step(p, m, cutlist, position-height,n,!dark, last_label);
 	}
     }
 }
@@ -181,4 +183,4 @@ module stepped(p, m=large_mode) {
 }
 
 paper = lihit_a5();
-stepped_debug(paper, large_mode);
+stepped(paper, small_mode);
