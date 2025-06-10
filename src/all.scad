@@ -43,8 +43,8 @@ module grid_a5_5mm_debug() {
 }
 
 // RENDER svg
-module stepped_a5_large() {
-    stepped(lihit_a5());
+module stepped_a5_small_back() {
+    stepped(mirror_paper(lihit_a5()), small_mode);
 }
 
 // RENDER svg
