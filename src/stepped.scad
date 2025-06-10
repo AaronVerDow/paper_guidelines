@@ -8,18 +8,20 @@ function stepped_mode(
     spacing=0.5,
     sstep=0.5, // conflict with another function
     header=0.3,
-    cutoff=3
-) = [start, spacing, sstep, header, cutoff];
+    cutoff=2,
+    prefer_large=true
+) = [start, spacing, sstep, header, cutoff, prefer_large];
 
 large_mode = stepped_mode();
 
-small_mode = stepped_mode(start=7, sstep=0.5, cutoff=1);
+small_mode = stepped_mode(start=7, sstep=0.5, prefer_large=false, cutoff=1);
 
 function start(m) = m[0];
 function spacing(m) = m[1];
 function sstep(m) = m[2];
 function header(m) = m[3];
 function cutoff(m) = m[4];
+function prefer_large(m) = m[5];
 
 function quicksort(arr) = !(len(arr)>0) ? [] : let(
 
@@ -33,8 +35,10 @@ function quicksort(arr) = !(len(arr)>0) ? [] : let(
 
 function total_line(height, spacing) = height + height * spacing;
 
+// Prefer smaller lines ==============================
+
 // Reset current to minimum once maximum is surpassed
-function loop_current(maximum, minimum, current) = (current > maximum) 
+function loop_max(maximum, minimum, current) = (current > maximum) 
     ? minimum
     : current;
 
@@ -53,8 +57,30 @@ function reset_max(maximum, minimum, step, spacing, space, current, array=[]) =
 // This will repeat lines until space is filled, preferring to repeat smaller lines.
 function cutlist(maximum, minimum, step, spacing, space, current, array=[]) = 
     (space > total_line(current, spacing))
-    ? cutlist(maximum, minimum, step, spacing, space-total_line(current, spacing), loop_current(maximum, minimum, current+step), concat(array, [current]))
+    ? cutlist(maximum, minimum, step, spacing, space-total_line(current, spacing), loop_max(maximum, minimum, current+step), concat(array, [current]))
     : reset_max(maximum, minimum, step, spacing, space, current, array);
+
+
+// Prefer larger lines ==============================
+
+function loop_min(maximum, minimum, current) = (current < minimum) 
+    ? maximum
+    : current;
+
+// Lower maximum once a line does not fit on page, repeat until it fits or minimum is hit
+function decrement_max(maximum, minimum, step, spacing, space, current, array=[]) = 
+    (
+	(maximum == minimum) ||
+	( space < total_line(minimum, spacing))
+    )
+    ? quicksort(array)
+    : cutlist(current - step, minimum, step, spacing, space, current - step, array);
+
+// current should start with maximum 
+function cutlist_large(maximum, minimum, step, spacing, space, current, array=[]) = 
+    (space > total_line(current, spacing))
+    ? cutlist_large(maximum, minimum, step, spacing, space-total_line(current, spacing), loop_min(maximum, minimum, current-step), concat(array, [current]))
+    : decrement_max(maximum, minimum, step, spacing, space, current, array);
 
 
 module shrinking_step_label(p, m, new_height, height) {
@@ -99,9 +125,17 @@ module shrinking_step(p, m, cutlist, position, n, dark=false) {
     }
 }
 
-module inner_stepped(p, m) {
-    echo("stepped_mode = ", m);
-    cutlist = cutlist(
+function get_cutlist(p, m) = 
+    (prefer_large(m))
+    ? cutlist_large(
+	maximum = start(m), 
+	minimum = cutoff(m),
+	step = sstep(m),
+	spacing = spacing(m),
+	space = north(p) - south(p),
+	current = start(m)
+    )
+    : cutlist(
 	maximum = start(m), 
 	minimum = cutoff(m),
 	step = sstep(m),
@@ -109,6 +143,10 @@ module inner_stepped(p, m) {
 	space = north(p) - south(p),
 	current = cutoff(m)
     );
+
+module inner_stepped(p, m) {
+    echo("stepped_mode = ", m);
+    cutlist = get_cutlist(p, m);
     echo(cutlist);
 
     // lines get progressively smaller
