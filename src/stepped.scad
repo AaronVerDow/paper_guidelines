@@ -3,21 +3,21 @@ include <corners.scad>;
 include <paper.scad>;
 include <debug.scad>;
 
-function challenge_mode(
+function stepped_mode(
     start=10,
     spacing=0.5,
-    step=1,
+    sstep=0.5, // conflict with another function
     header=0.3,
-    cutoff=2
-) = [start, spacing, step, header, cutoff];
+    cutoff=3
+) = [start, spacing, sstep, header, cutoff];
 
-large_mode = challenge_mode();
+large_mode = stepped_mode();
 
-small_mode = challenge_mode(start=7, cutoff=1);
+small_mode = stepped_mode(start=7, sstep=0.5, cutoff=1);
 
 function start(m) = m[0];
 function spacing(m) = m[1];
-function step(m) = m[2];
+function sstep(m) = m[2];
 function header(m) = m[3];
 function cutoff(m) = m[4];
 
@@ -57,11 +57,11 @@ function cutlist(maximum, minimum, step, spacing, space, current, array=[]) =
     : reset_max(maximum, minimum, step, spacing, space, current, array);
 
 
-module shrinking_bar_label(p, m, new_height, height) {
+module shrinking_step_label(p, m, new_height, height) {
     module label(m, halign="right") {
 	text(format_two_decimals(height), size=new_height, valign="center", halign=halign, font="ubuntu:bold");
     }
-    echo("label = ", height);
+    // echo("label = ", height);
     // remove false to put flipped numbers on left hand side
     // looks worse but harder to write on
     if (mirrored(p) && false) {
@@ -73,37 +73,38 @@ module shrinking_bar_label(p, m, new_height, height) {
     }
 }
 
-module shrinking_bar(p, m, cutlist, position, n, dark=false) {
-    echo("n = ", n);
-    echo("height = ", cutlist[n]);
+module shrinking_step(p, m, cutlist, position, n, dark=false) {
+    // echo("n = ", n);
+    // echo("height = ", cutlist[n]);
     height = cutlist[n];
     if ((n >= 0) && (position > south(p))) {
 	if (dark) {
-	    echo("dark");
+	    // echo("dark");
 	    new_height = height*spacing(m);
 	    translate([west(p),position-new_height])
 	    difference() { // the actual bar
 		square([east(p)-west(p),new_height]);
 		minkowski() {
-		    shrinking_bar_label(p, m, new_height, height);
+		    shrinking_step_label(p, m, new_height, height);
 		    circle(d=height/2);
 		}
 	    }
 	    translate([west(p),position-new_height])
-	    shrinking_bar_label(p, m, new_height, height);
-	    shrinking_bar(p, m, cutlist, position-new_height,n - 1,!dark);
+	    shrinking_step_label(p, m, new_height, height);
+	    shrinking_step(p, m, cutlist, position-new_height,n - 1,!dark);
 	} else {
-	    echo("light");
-	    shrinking_bar(p, m, cutlist, position-height,n,!dark);
+	    // echo("light");
+	    shrinking_step(p, m, cutlist, position-height,n,!dark);
 	}
     }
 }
 
-module inner_challenge(p, m) {
+module inner_stepped(p, m) {
+    echo("stepped_mode = ", m);
     cutlist = cutlist(
 	maximum = start(m), 
 	minimum = cutoff(m),
-	step = step(m),
+	step = sstep(m),
 	spacing = spacing(m),
 	space = north(p) - south(p),
 	current = cutoff(m)
@@ -113,34 +114,33 @@ module inner_challenge(p, m) {
     // lines get progressively smaller
     translate([west(p),north(p)-header(m)])
     square([east(p)-west(p),header(m)]);
-    shrinking_bar(p, m, cutlist, north(p)-header(m), len(cutlist) - 1);
+    shrinking_step(p, m, cutlist, north(p)-header(m), len(cutlist) - 1);
 }
 
-module challenge_debug(p, m) {
+module stepped_debug(p, m) {
     trim(p)
     debug(p, [
 	str("start = ", start(m)),
 	str("spacing = ", spacing(m)),
-	str("step = ", step(m)),
+	str("step = ", sstep(m)),
 	str("header = ", header(m)),
 	str("cutoff = ", cutoff(m))
     ])
-    inner_challenge(p, m);
+    inner_stepped(p, m);
     corners(p);
 }
 
-module challenge_back(p, m=large_mode) {
+module stepped_back(p, m=large_mode) {
     trim(p)
-    inner_challenge(mirror_paper(p), m);
+    inner_stepped(mirror_paper(p), m);
     corners(p);
 }
 
-module challenge_stepped(p, m=large_mode) {
+module stepped(p, m=large_mode) {
     trim(p)
-    inner_challenge(p, m);
+    inner_stepped(p, m);
     corners(p);
 }
 
 paper = lihit_a5();
-mode = large_mode;
-challenge_debug(paper, mode);
+stepped_debug(paper, large_mode);

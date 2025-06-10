@@ -1,5 +1,6 @@
 include <bars.scad>;
 include <challenge.scad>;
+include <stepped.scad>;
 include <paper.scad>;
 include <dots.scad>;
 include <lines.scad>;
@@ -39,6 +40,16 @@ module grid_a5_3mm() {
 // RENDER svg
 module grid_a5_5mm_debug() {
     grid_debug(lihit_a5(ends="space"), grid_options());
+}
+
+// RENDER svg
+module stepped_a5_large() {
+    stepped(lihit_a5());
+}
+
+// RENDER svg
+module stepped_a5_small() {
+    stepped(lihit_a5(), small_mode);
 }
 
 // RENDER svg
