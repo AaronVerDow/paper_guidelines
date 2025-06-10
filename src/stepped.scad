@@ -14,7 +14,7 @@ function stepped_mode(
 
 large_mode = stepped_mode();
 
-small_mode = stepped_mode(start=7, sstep=0.5, prefer_large=false, cutoff=1);
+small_mode = stepped_mode(start=7, sstep=0.5, prefer_large=false, cutoff=1, header=0.5);
 
 function start(m) = m[0];
 function spacing(m) = m[1];
