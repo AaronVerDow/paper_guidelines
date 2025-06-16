@@ -1,14 +1,17 @@
 # quick and dirty rendering script
 set -euo pipefail
 
-openscad-render all.scad
+(
+	cd ../src/
+	openscad-render all.scad
+)
 
 color=${1:-black}
 #color=${1:-#f0f0f0}
 
 # pkg librsvg
 
-for input in $( find ./output/ | grep 'svg$'); do
+for input in $( find ../src/output/ | grep 'svg$'); do
 	output=${input//svg/pdf}
 	thumbnail="../media/$( basename "$output" | sed 's/pdf$/png/' )"
 	sed -i 's/stroke="black"//g' "$input"
