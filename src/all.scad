@@ -5,6 +5,7 @@ include <paper.scad>;
 include <dots.scad>;
 include <lines.scad>;
 include <grid.scad>;
+include <table_of_contents.scad>;
 // NOPREVIEW
 
 // RENDER svg
@@ -126,3 +127,9 @@ module bars_a5_2o5mm() {
 module bars_a5_2o5mm_back() {
     bars(mirror_paper(lihit_a5(2.5)), "2.5");
 };
+
+// RENDER svg
+module toc_a5_3o5mm() {
+    toc(lihit_a5(3.5), "3.5");
+};
+
