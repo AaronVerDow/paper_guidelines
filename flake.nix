@@ -13,7 +13,16 @@
           librsvg
           ghostscript
           openscad
+          (python3.withPackages (ps: with ps; [
+            pip
+            virtualenv
+          ]))
         ];
+        shellHook = ''
+          virtualenv .venv
+          source .venv/bin/activate
+          pip install papersize
+        '';
       };
     };
 }
