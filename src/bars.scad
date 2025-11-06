@@ -36,10 +36,14 @@ module bar_label(p, label) {
 }
 
 
-module bars(p, label="") {
-    trim(p)
-    inner_bars(p, label);
-    corners(p);
+module bars(p, label="", debug=false) {
+    if (debug) {
+	bars_debug(p, label="");
+    } else {
+	trim(p)
+	inner_bars(p, label);
+	corners(p);
+    }
 }
 
 bars_debug(mirror_paper(lihit_a5()), "1.5x 5.0");

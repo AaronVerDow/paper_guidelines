@@ -176,10 +176,14 @@ module stepped_back(p, m=large_mode) {
     corners(p);
 }
 
-module stepped(p, m=large_mode) {
-    trim(p)
-    inner_stepped(p, m);
-    corners(p);
+module stepped(p, m=large_mode, debug=false) {
+    if (debug) {
+	stepped_debug(p, m);
+    } else {
+	trim(p)
+	inner_stepped(p, m);
+	corners(p);
+    }
 }
 
 paper = lihit_a5();

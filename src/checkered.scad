@@ -52,10 +52,14 @@ module checkered_debug(p, o) {
     corners(p);
 }
 
-module checkered(p, o) {
-    trim(p)
-    inner_checkered(p, o);
-    corners(p);
+module checkered(p, o, debug=false) {
+    if (debug) {
+        checkered_debug(p, o);
+    } else {
+        trim(p)
+        inner_checkered(p, o);
+        corners(p);
+    }
 }
 
 checkered_debug(lihit_a5(line=0, ends="space"), checkered_options(label="5.0")); 

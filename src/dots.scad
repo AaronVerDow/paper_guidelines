@@ -46,10 +46,14 @@ module dots_debug(p, o) {
     corners(p);
 }
 
-module dots(p, o) {
-    trim(p)
-    inner_dots(p, o);
-    corners(p);
+module dots(p, o, debug=false) {
+    if(debug) {
+	dots_debug(p, o);
+    } else {
+	trim(p)
+	inner_dots(p, o);
+	corners(p);
+    }
 }
 
 dots_debug(lihit_a5(ends="space"), dot_options());

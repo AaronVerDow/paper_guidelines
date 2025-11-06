@@ -84,10 +84,14 @@ module challenge_back(p, m=hard_mode) {
     corners(p);
 }
 
-module challenge(p, m=hard_mode) {
-    trim(p)
-    inner_challenge(p, m);
-    corners(p);
+module challenge(p, m=hard_mode, debug=false) {
+    if (debug) {
+	challenge_debug(p, m);
+    } else {
+	trim(p)
+	inner_challenge(p, m);
+	corners(p);
+    }
 }
 
 paper = lihit_a5();

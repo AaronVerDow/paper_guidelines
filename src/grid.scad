@@ -77,10 +77,14 @@ module grid_debug(p, o) {
     corners(p);
 }
 
-module grid(p, o) {
-    trim(p)
-    inner_grid(p, o);
-    corners(p);
+module grid(p, o, debug=false) {
+    if (debug) {
+        grid_debug(p, o);
+    } else {
+        trim(p)
+        inner_grid(p, o);
+        corners(p);
+    }
 }
 
 grid_debug(lihit_a5(line=0, ends="space"), grid_options(label="5.0"));

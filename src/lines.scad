@@ -27,10 +27,14 @@ module lines_debug(p, stripe=0.3) {
 }
 
 // RENDER svg
-module lines(p, stripe=0.3) {
-    trim(p)
-    inner_lines(p, stripe);
-    corners(p);
+module lines(p, stripe=0.3, debug=false) {
+    if (debug) {
+	lines_debug(p, stripe);
+    } else {
+	trim(p)
+	inner_lines(p, stripe);
+	corners(p);
+    }
 }
 
 lines_debug(lihit_a5(ends="space"));
