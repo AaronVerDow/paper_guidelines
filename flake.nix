@@ -12,7 +12,7 @@
         buildInputs = with pkgs; [
           librsvg
           ghostscript
-          openscad
+          # openscad
           (python3.withPackages (ps: with ps; [
             pip
             virtualenv
