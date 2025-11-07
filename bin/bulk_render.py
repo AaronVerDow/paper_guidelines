@@ -2,6 +2,7 @@
 
 import subprocess
 import papersize
+import os
 
 
 def get_git_root() -> str:
@@ -24,20 +25,29 @@ spaces: list[float] = [x * 0.5 for x in range(4, 15)]
 lines: list[float] = [1.0, 1.5]
 
 
-def safe_number(number):
-    # take a number like 1 or 7.5 and return 1o0 or 7o5
-    # use o as decimal and add one digit after the decimal
-    pass
+def safe_number(number) -> str:
+    # number to use in filenames
+    str_num = f"{number:.1f}"
+    return str_num.replace(".", "o")
 
 
 def render(outdir, paper, style, space, line, label, mirror, debug):
-    basename = f"{paper}_{style}_{space}"
+    safe_space = safe_number(space)
+    safe_line = f"x{safe_number(line)}"
+    dir = os.path.join(outdir, paper, style, safe_space, safe_line)
+
+    if not os.path.isdir(dir):
+        os.mkdir(dir)
+
+    basename = f"{paper}_{style}_{safe_space}"
     if line != 1:
-        basename = f"{basename}_x{line}"
+        basename = f"{basename}_{safe_line}"
     if label:
         basename = f"{basename}_labeled"
     if mirror:
         basename = f"{basename}_rev"
+
+    outfile = f"
 
     return
 
@@ -53,7 +63,7 @@ def main():
                     render(outdir, paper, style, space, line, label, mirror, debug)
 
 
-# openscad grid.scad -O export-svg/fill=true -O export-svg/stroke=false -O export-svg/fill-color=black -o test.svg
+#  openscad test.scad -O export-svg/fill=true -O export-svg/stroke=false -O export-svg/fill-color=black -o test.svg -D x=300
 # 	rsvg-convert -f pdf -o "$output" "$input"
 
 # dimensions:
