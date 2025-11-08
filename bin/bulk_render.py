@@ -40,8 +40,7 @@ def y(paper):
 
 
 def scad_contents(style):
-    return f"""
-use <src/bulk.scad>;
+    return f"""use <src/bulk.scad>;
 
 x=100;
 y=100;
@@ -53,7 +52,7 @@ debug = 0;
 label = "test";
 
 bulk_{style}(x, y, margin, margin, margin, margin, space, line, label, mirrored, debug);
-    """
+"""
 
 
 def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirror, debug):
@@ -77,35 +76,39 @@ def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirro
 
     margin = margin_ratio * x(paper)
 
+    openscad_args = [
+        "openscad",
+        infile,
+        "-O",
+        "export-svg/fill=true",
+        "-O",
+        "export-svg/stroke=false",
+        "-O",
+        "export-svg/fill-color=black",
+        "-o",
+        svgfile,
+        "-D",
+        f"x={x(paper)}",
+        "-D",
+        f"y={y(paper)}",
+        "-D",
+        f"space={space}",
+        "-D",
+        f"line={line-1}",
+        "-D",
+        f"mirrored={int(mirror)}",
+        "-D",
+        f"debug={int(debug)}",
+        "-D",
+        f"label={label}",
+        "-D",
+        f"margin={margin}",
+    ]
+
+    print(" ".join(openscad_args))
+
     subprocess.run(
-        [
-            "openscad",
-            infile,
-            "-O",
-            "export-svg/fill=true",
-            "-O",
-            "export-svg/stroke=false",
-            "-O",
-            "export-svg/fill-color=black",
-            "-o",
-            svgfile,
-            "-D",
-            f"x={x(paper)}",
-            "-D",
-            f"y={y(paper)}",
-            "-D",
-            f"space={space}",
-            "-D",
-            f"line={line-1}",
-            "-D",
-            f"mirrored={int(mirror)}",
-            "-D",
-            f"debug={int(debug)}",
-            "-D",
-            f"label={label}",
-            "-D",
-            f"margin={margin}",
-        ],
+        openscad_args,
         check=True,
     )
 
@@ -119,7 +122,7 @@ def main():
     outdir = f"{root}/out"
     infile = f"{root}/infile.scad"
 
-    margin_ratio = 4 / 148
+    margin_ratio = 4 / 14
 
     mirror = 0
     debug = 0
