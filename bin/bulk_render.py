@@ -31,7 +31,32 @@ def safe_number(number) -> str:
     return str_num.replace(".", "o")
 
 
-def render(outdir, paper, style, space, line, label, mirror, debug):
+def x(paper):
+    return float(papersize.parse_papersize(paper, "mm")[0])
+
+
+def y(paper):
+    return float(papersize.parse_papersize(paper, "mm")[1])
+
+
+def scad_contents(style):
+    return f"""
+use <src/bulk.scad>;
+
+x=100;
+y=100;
+margin = 5;
+space = 5;
+line = 0.5;
+mirrored = 0;
+debug = 0;
+label = "test";
+
+bulk_{style}(x, y, margin, margin, margin, margin, space, line, label, mirrored, debug);
+    """
+
+
+def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirror, debug):
     safe_space = safe_number(space)
     safe_line = f"x{safe_number(line)}"
     dir = os.path.join(outdir, paper, style, safe_space, safe_line)
@@ -47,33 +72,67 @@ def render(outdir, paper, style, space, line, label, mirror, debug):
     if mirror:
         basename = f"{basename}_rev"
 
-    outfile = f"
+    svgfile = os.path.join(dir, f"{basename}.svg")
+    pdffile = os.path.join(dir, f"{basename}.pdf")
 
-    return
+    margin = margin_ratio * x(paper)
+
+    subprocess.run(
+        [
+            "openscad",
+            infile,
+            "-O",
+            "export-svg/fill=true",
+            "-O",
+            "export-svg/stroke=false",
+            "-O",
+            "export-svg/fill-color=black",
+            "-o",
+            svgfile,
+            "-D",
+            f"x={x(paper)}",
+            "-D",
+            f"y={y(paper)}",
+            "-D",
+            f"space={space}",
+            "-D",
+            f"line={line-1}",
+            "-D",
+            f"mirrored={int(mirror)}",
+            "-D",
+            f"debug={int(debug)}",
+            "-D",
+            f"label={label}",
+            "-D",
+            f"margin={margin}",
+        ],
+        check=True,
+    )
+
+    subprocess.run(["rsvg-convert", "-f", "pdf", "-o", pdffile, svgfile], check=True)
+
+    os.remove(svgfile)
 
 
 def main():
     root = get_git_root()
     outdir = f"{root}/out"
+    infile = f"{root}/infile.scad"
+
+    margin_ratio = 4 / 148
+
+    mirror = 0
+    debug = 0
+    label = ""
 
     for paper in papers():
         for style in styles:
+            with open(infile, "w") as file_object:
+                file_object.write(scad_contents(style))
             for space in spaces:
                 for line in lines:
-                    render(outdir, paper, style, space, line, label, mirror, debug)
+                    render(infile, outdir, paper, style, space, line, label, margin_ratio, mirror, debug)
 
-
-#  openscad test.scad -O export-svg/fill=true -O export-svg/stroke=false -O export-svg/fill-color=black -o test.svg -D x=300
-# 	rsvg-convert -f pdf -o "$output" "$input"
-
-# dimensions:
-#   types = lines, dots, grid, bars, stepped
-#   paper
-#   spacing 2.0 - 7.0
-#   line spacing 0, 1.5
-#   mirrored
-#   debug
-#   label true/false
 
 if __name__ == "__main__":
     main()
