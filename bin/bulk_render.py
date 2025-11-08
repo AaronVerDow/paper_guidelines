@@ -62,7 +62,7 @@ def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirro
     dir = os.path.join(outdir, paper, style, safe_space, safe_line)
 
     if not os.path.isdir(dir):
-        os.mkdir(dir)
+        os.makedirs(dir, exist_ok=True)
 
     basename = f"{paper}_{style}_{safe_space}"
     if line != 1:
