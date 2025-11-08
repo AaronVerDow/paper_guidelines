@@ -16,7 +16,8 @@ def get_git_root() -> str:
 
 
 def papers() -> list[str]:
-    return list(papersize.SIZES.keys())
+    # return list(papersize.SIZES.keys())
+    return ["a5"]
 
 
 styles: list[str] = ["lines", "dots", "grid", "bars", "stepped"]
@@ -49,7 +50,7 @@ space = 5;
 line = 0.5;
 mirrored = 0;
 debug = 0;
-label = "test";
+label = "";
 
 bulk_{style}(x, y, margin, margin, margin, margin, space, line, label, mirrored, debug);
 """
@@ -100,10 +101,12 @@ def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirro
         "-D",
         f"debug={int(debug)}",
         "-D",
-        f"label={label}",
-        "-D",
         f"margin={margin}",
     ]
+
+    if label:
+        openscad_args.append("-D")
+        openscad_args.append(f"label={label}")
 
     print(" ".join(openscad_args))
 
@@ -112,7 +115,9 @@ def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirro
         check=True,
     )
 
-    subprocess.run(["rsvg-convert", "-f", "pdf", "-o", pdffile, svgfile], check=True)
+    rsvg_args = ["rsvg-convert", "-f", "pdf", "-o", pdffile, svgfile]
+    print(" ".join(rsvg_args))
+    subprocess.run(rsvg_args)
 
     os.remove(svgfile)
 
@@ -122,7 +127,7 @@ def main():
     outdir = f"{root}/out"
     infile = f"{root}/infile.scad"
 
-    margin_ratio = 4 / 14
+    margin_ratio = 5 / 148
 
     mirror = 0
     debug = 0
