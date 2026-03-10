@@ -1,8 +1,8 @@
 // NOPREVIEW
 
 // Constants
-corner_width = 0.3;
-corner_length = 1;
+corner_width = 0.1;
+corner_length = 0.1;
 debugging_line_font_size=2.5;
 
 function paper(

@@ -1,7 +1,7 @@
 // NOPREVIEW
 
-corner_width = 0.3;
-corner_length = 1;
+corner_width = 0.1;
+corner_length = 0.1;
 
 module corner() {
     square([corner_width,corner_length]);

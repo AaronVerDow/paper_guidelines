@@ -2,19 +2,20 @@ include <common.scad>;
 include <corners.scad>;
 include <paper.scad>;
 include <debug.scad>;
+include <page_numbers.scad>;
 
 function stepped_mode(
     start=10,
     spacing=0.5,
     sstep=0.5, // conflict with another function
     header=0.3,
-    cutoff=2,
+    cutoff=1.5,
     prefer_large=true
 ) = [start, spacing, sstep, header, cutoff, prefer_large];
 
 large_mode = stepped_mode();
 
-small_mode = stepped_mode(start=7, sstep=0.5, prefer_large=false, cutoff=1, header=0.5);
+small_mode = stepped_mode(start=5, sstep=0.5, prefer_large=false, cutoff=1.5, header=0.5);
 
 function start(m) = m[0];
 function spacing(m) = m[1];
@@ -183,6 +184,7 @@ module stepped(p, m=large_mode, debug=false) {
 	trim(p)
 	inner_stepped(p, m);
 	corners(p);
+	page_numbers(p);
     }
 }
 

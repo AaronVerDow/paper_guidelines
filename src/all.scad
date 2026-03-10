@@ -2,11 +2,17 @@ include <bars.scad>;
 include <challenge.scad>;
 include <stepped.scad>;
 include <paper.scad>;
+include <corners.scad>;
 include <dots.scad>;
 include <lines.scad>;
 include <grid.scad>;
 include <table_of_contents.scad>;
 // NOPREVIEW
+
+// RENDER svg
+module blank() {
+    corners(lihit_a5());
+}
 
 // RENDER svg
 module half_lines_a5_5mm() {
@@ -127,6 +133,34 @@ module bars_a5_2o5mm() {
 module bars_a5_2o5mm_back() {
     bars(mirror_paper(lihit_a5(2.5)), "2.5");
 };
+
+// 2.0 =========================================
+
+// RENDER svg
+module bars_a5_2mm() {
+    bars(lihit_a5(2), "2.0");
+};
+
+// RENDER svg
+module bars_a5_2mm_back() {
+    bars(mirror_paper(lihit_a5(2)), "2.0");
+};
+
+
+// 1.5 =========================================
+
+// RENDER svg
+module bars_a5_1o5mm() {
+    bars(lihit_a5(1.5), "1.5");
+};
+
+// RENDER svg
+module bars_a5_1o5mm_back() {
+    bars(mirror_paper(lihit_a5(1.5)), "1.5");
+};
+
+
+// Table of contents ==========================
 
 // RENDER svg
 module toc_a5_3o5mm() {
