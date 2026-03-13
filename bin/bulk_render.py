@@ -22,7 +22,7 @@ def papers() -> list[str]:
 
 styles: list[str] = ["lines", "dots", "grid", "bars", "stepped"]
 
-spaces: list[float] = [x * 0.5 for x in range(4, 15)]
+spaces: list[float] = [x * 0.5 for x in range(3, 15)]
 lines: list[float] = [1.0, 1.5]
 
 
