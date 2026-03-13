@@ -21,7 +21,7 @@
         shellHook = ''
           virtualenv .venv
           source .venv/bin/activate
-          pip install papersize
+          export PATH="$PWD/bin:$PATH"
         '';
       };
     };
