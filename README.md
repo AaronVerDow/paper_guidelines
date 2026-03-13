@@ -31,6 +31,10 @@ Print solid black and place behind blank paper.
 
 ![](media/all_bars_a5_5mm.png)
 
+# Building
+
+* `bin/bulk_render.py`: WIP python script to render all paper and option combinations
+* `bin/render.sh`: quick and dirty render script to make what I actually use using `src/all.scad` and `openscad-post-processor`
 
 # Printing 
 
