@@ -1,6 +1,6 @@
 // NOPREVIEW
 
-function lihit_a5(space=5, line=0.5, ends="line") = paper(
+function lihit_a5(space=5, line=0.5, ends="line", loose=false) = paper(
     x = 148,
     y = 210,
     north = 20,
@@ -13,5 +13,7 @@ function lihit_a5(space=5, line=0.5, ends="line") = paper(
     // west = 8,
     space = space,
     line = line,
-    ends = ends
+    ends = ends,
+    reversible = loose,
+    numbered = loose
 );

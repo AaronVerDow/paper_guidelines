@@ -25,9 +25,21 @@ module page_numbers(p) {
 	if (back(p)) {
 	    translate([west(p)+total_x,south(p)])
 	    page_number_boxes(p);
+
+	    if(reversible(p)) {
+		dirror_y(y(p))
+		translate([west(p)+total_x,south(p)])
+		page_number_boxes(p);
+	    }
 	} else {
 	    translate([east(p),south(p)])
 	    page_number_boxes(p);
+
+	    if(reversible(p)) {
+		dirror_y(y(p))
+		translate([east(p),south(p)])
+		page_number_boxes(p);
+	    }
 	}
     }
 }

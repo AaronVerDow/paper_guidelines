@@ -13,9 +13,13 @@ function stepped_mode(
     prefer_large=true
 ) = [start, spacing, sstep, header, cutoff, prefer_large];
 
-large_mode = stepped_mode();
-
-small_mode = stepped_mode(start=5, sstep=0.5, prefer_large=false, cutoff=1.5, header=0.5);
+small_mode = stepped_mode(
+    start=5,
+    sstep=0.5,
+    prefer_large=false,
+    cutoff=1.5,
+    header=0.5
+);
 
 function start(m) = m[0];
 function spacing(m) = m[1];
