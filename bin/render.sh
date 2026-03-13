@@ -1,8 +1,10 @@
 # quick and dirty rendering script
 set -euo pipefail
 
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
 (
-	cd ../src/
+	cd "$REPO_ROOT/src/"
 	openscad-render all.scad
 )
 
@@ -11,7 +13,7 @@ color=${1:-black}
 
 # pkg librsvg
 
-for input in $( find ../src/output/ | grep 'svg$'); do
+for input in $( find "$REPO_ROOT/src/output/" | grep 'svg$'); do
 	output=${input//svg/pdf}
 	thumbnail="../media/$( basename "$output" | sed 's/pdf$/png/' )"
 	sed -i 's/stroke="black"//g' "$input"
