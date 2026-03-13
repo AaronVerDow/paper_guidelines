@@ -1,5 +1,4 @@
 include <bars.scad>;
-include <challenge.scad>;
 include <stepped.scad>;
 include <paper.scad>;
 include <corners.scad>;
@@ -57,16 +56,6 @@ module stepped_a5_small_back() {
 // RENDER svg
 module stepped_a5_small() {
     stepped(lihit_a5(), small_mode);
-}
-
-// RENDER svg
-module challenge_a5() {
-    challenge(lihit_a5());
-}
-
-// RENDER svg
-module challenge_a5_back() {
-    challenge(mirror_paper(lihit_a5()));
 }
 
 // RENDER svg
