@@ -1,3 +1,4 @@
+// NOPREVIEW
 module page_numbers(p) {
     digits=4;
     line=0.3;
@@ -20,11 +21,13 @@ module page_numbers(p) {
 	    }
 	}
     }
-    if (back(p)) {
-	translate([west(p)+total_x,south(p)])
-	page_number_boxes(p);
-    } else {
-	translate([east(p),south(p)])
-	page_number_boxes(p);
+    if (numbered(p)) {
+	if (back(p)) {
+	    translate([west(p)+total_x,south(p)])
+	    page_number_boxes(p);
+	} else {
+	    translate([east(p),south(p)])
+	    page_number_boxes(p);
+	}
     }
 }
