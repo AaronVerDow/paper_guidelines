@@ -14,66 +14,14 @@ module blank() {
 }
 
 // RENDER svg
-module half_lines_a5_5mm() {
-    lines(lihit_a5(ends="space"));
-}
-
-// RENDER svg
-module lines_a5_5mm() {
-    lines(lihit_a5(line=0, ends="space"));
-}
-
-// RENDER svg
-module half_dots_a5_5mm() {
-    dots(lihit_a5(ends="space"), dot_options());
-}
-
-// RENDER svg
-module dots_a5_5mm() {
-    dots(lihit_a5(line=0, ends="space"), dot_options());
-}
-
-// RENDER svg
-module grid_a5_5mm() {
-    grid(lihit_a5(line=0, ends="space"), grid_options(label="5.0"));
-}
-
-// RENDER svg
-module grid_a5_3mm() {
-    grid(lihit_a5(3, line=0, ends="space"), grid_options(grid=3, label="3.0"));
-}
-
-// RENDER svg
-module grid_a5_5mm_debug() {
-    grid_debug(lihit_a5(ends="space"), grid_options());
-}
-
-// RENDER svg
-module stepped_a5_small_back() {
+module stepped_a5_back() {
     stepped(mirror_paper(lihit_a5()), small_mode);
 }
 
 // RENDER svg
-module stepped_a5_small() {
+module stepped_a5() {
     stepped(lihit_a5(), small_mode);
 }
-
-// RENDER svg
-module bars_a5_5mm_debug() {
-    bars_debug(lihit_a5(), "5.0");
-};
-
-// 5.0 =========================================
-
-// RENDER svg
-module bars_a5_5mm() {
-    bars(lihit_a5(), "5.0");
-};
-
-// RENDER svg
-module bars_a5_5mm_back() {
-    bars(mirror_paper(lihit_a5()), "5.0");
-};
 
 // 4.0 =========================================
 
