@@ -16,9 +16,9 @@ function paper(
     line = 0.5,
     ends = "line",
     back = false,
-    reversable = false,
+    reversible = false,
     numbered = false
-) = [ x, y, north, south, east, west, space, line, ends, back, reversable, numbered];
+) = [ x, y, north, south, east, west, space, line, ends, back, reversible, numbered];
 
 function mirror_paper(p) = [
     x(p),
@@ -48,7 +48,8 @@ function ends(p) = (p[8] == "space")
     ? space(p) 
     : line(p);
 function back(p) = p[9];
-function left(p) = p[9];
+function reversible(p) = p[9];
+function numbered(p) = p[9];
 
 function step(p) = space(p)+line(p);
 function y_offset(p) = ((y(p)-ends(p)-n(p)-s(p))%step(p))/2;
