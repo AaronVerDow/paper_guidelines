@@ -92,7 +92,7 @@ module shrinking_step_label(p, m, new_height, height, last_label) {
     // remove false to put flipped numbers on left hand side
     // looks worse but harder to write on
     if (last_label != height) {
-	if (mirrored(p) && false) {
+	if (back(p) && false) {
 	    translate([0,new_height/2])
 	    label(m, "left");
 	} else {

@@ -20,7 +20,7 @@ module page_numbers(p) {
 	    }
 	}
     }
-    if (mirrored(p)) {
+    if (back(p)) {
 	translate([west(p)+total_x,south(p)])
 	page_number_boxes(p);
     } else {

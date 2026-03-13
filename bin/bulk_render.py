@@ -48,15 +48,15 @@ y=100;
 margin = 5;
 space = 5;
 line = 0.5;
-mirrored = 0;
+back = 0;
 debug = 0;
 label = "";
 
-bulk_{style}(x, y, margin, margin, margin, margin, space, line, label, mirrored, debug);
+bulk_{style}(x, y, margin, margin, margin, margin, space, line, label, back, debug);
 """
 
 
-def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirror, debug):
+def render(infile, outdir, paper, style, space, line, label, margin_ratio, back, debug):
     safe_space = safe_number(space)
     safe_line = f"x{safe_number(line)}"
     dir = os.path.join(outdir, paper, style, safe_space, safe_line)
@@ -69,7 +69,7 @@ def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirro
         basename = f"{basename}_{safe_line}"
     if label:
         basename = f"{basename}_labeled"
-    if mirror:
+    if back:
         basename = f"{basename}_rev"
 
     svgfile = os.path.join(dir, f"{basename}.svg")
@@ -97,7 +97,7 @@ def render(infile, outdir, paper, style, space, line, label, margin_ratio, mirro
         "-D",
         f"line={line-1}",
         "-D",
-        f"mirrored={int(mirror)}",
+        f"back={int(back)}",
         "-D",
         f"debug={int(debug)}",
         "-D",
@@ -129,7 +129,7 @@ def main():
 
     margin_ratio = 5 / 148
 
-    mirror = 0
+    back = 0
     debug = 0
     label = ""
 
@@ -139,7 +139,7 @@ def main():
                 file_object.write(scad_contents(style))
             for space in spaces:
                 for line in lines:
-                    render(infile, outdir, paper, style, space, line, label, margin_ratio, mirror, debug)
+                    render(infile, outdir, paper, style, space, line, label, margin_ratio, back, debug)
 
 
 if __name__ == "__main__":

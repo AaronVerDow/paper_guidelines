@@ -26,7 +26,7 @@ module bars_debug(p, label="") {
 }
 
 module bar_label(p, label) {
-    if (mirrored(p)) {
+    if (back(p)) {
 	translate([west(p),north(p)])
 	text(label, halign="left", valign="top", size=line(p), font="Ubuntu:bold");
     } else {

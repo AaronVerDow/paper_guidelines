@@ -15,8 +15,10 @@ function paper(
     space = 5,
     line = 0.5,
     ends = "line",
-    mirrored = false
-) = [ x, y, north, south, east, west, space, line, ends, mirrored];
+    back = false,
+    reversable = false,
+    numbered = false
+) = [ x, y, north, south, east, west, space, line, ends, back, reversable, numbered];
 
 function mirror_paper(p) = [
     x(p),
@@ -28,6 +30,8 @@ function mirror_paper(p) = [
     space(p),
     p[7],
     p[8],
+    p[9],
+    p[10],
     true
 ];
 
@@ -43,7 +47,6 @@ function line(p) = p[7] * space(p);
 function ends(p) = (p[8] == "space") 
     ? space(p) 
     : line(p);
-function mirrored(p) = p[9];
 function back(p) = p[9];
 function left(p) = p[9];
 
